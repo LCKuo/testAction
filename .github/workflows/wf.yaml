@@ -1,0 +1,24 @@
+name: Add Task to Project Todo
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  add_task_to_project:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add Task to Project Todo
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issueTitle = context.payload.issue.title;
+            const projectId = 'YOUR_PROJECT_ID';
+            const columnId = 'YOUR_TODO_COLUMN_ID';
+            const taskContent = '- [ ] 新增一個任務到 Project 的 Todo 區塊: ' + issueTitle;
+            github.projects.createCard({
+              project_id: projectId,
+              column_id: columnId,
+              content_type: 'Task',
+              note: taskContent
+            });
